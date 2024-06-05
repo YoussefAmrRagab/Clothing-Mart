@@ -41,13 +41,18 @@ Welcome to the Flutter Clothing Mart App! This project is a mobile application d
 - ⚙️ **Profile Management**: Allows users to view and update their profile information.
 - 🚪 **Logout**: Enables users to log out of their account.
 
-## Architecture: MVVM
+## Clean Architecture Project 🏗️
 
-This project follows the MVVM (Model-View-ViewModel) architecture pattern:
+### Presentation Layer 🎨
 
-- 🏗️ **Model**: Represents the data and business logic of the application. Includes classes for clothing items, user data, and authentication.
 - 🖼️ **View**: Represents the UI components visible to the user. Includes screens such as login, signup, home, details, cart, favorite, and settings.
-- 🧠 **ViewModel**: Acts as an intermediary between the View and the Model. Manages the presentation logic and state of the UI. Provides data to the View and handles user interactions. Utilizes the Provider package for state management in Flutter.
+- 🧠 **Provider**: Acts as an intermediary between the View and the Domain layers. Manages the presentation logic and state of the UI. Provides data to the View and handles user interactions.
+
+### Domain Layer 💡
+Encapsulates the core business logic and rules of the application.
+
+### Data Layer 📊
+Handles data retrieval and storage, interacting with external sources.
 
 ## Technologies Used
 
