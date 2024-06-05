@@ -1,11 +1,9 @@
 # 🛍️ Flutter Clothing Mart App
 <div style="display: flex; flex-direction: row;">
-    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/f7c1e53d-30ce-4080-8d55-6841ec51764f" alt="Screenshot 0" style="width: 200px; height: auto; margin-right: 10px;">
-    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/a2860ef0-4d69-4279-8c18-234e17e89ac9" alt="Screenshot 1" style="width: 200px; height: auto;">
-    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/ba0df0f8-51b3-4045-8f9b-892884eaad81" alt="Screenshot 2" style="width: 200px; height: auto; margin-right: 10px;">
-    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/73302a33-4320-4221-9479-0fdf0037f7a9" alt="Screenshot 3" style="width: 200px; height: auto; margin-right: 10px;">
-    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/942d99b9-cfdc-4894-99d3-434093eafb95" alt="Screenshot 4" style="width: 200px; height: auto; margin-right: 10px;">
-    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/677ccbad-231f-4a96-8b2a-079b470ada1a" alt="Screenshot 5" style="width: 200px; height: auto; margin-right: 10px;">
+    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/8c099eb0-c0b1-41f2-a511-2ede4b7ef519" alt="Screenshot 0" style="width: 200px; height: auto; margin-right: 10px;">
+    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/a13ecd0d-8ecb-4704-b260-c7fad62ffaad" alt="Screenshot 3" style="width: 200px; height: auto; margin-right: 10px;">
+    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/bffa1e9a-e04b-4017-a1c3-3f4a1fcaf4c4" alt="Screenshot 1" style="width: 200px; height: auto;">
+    <img src="https://github.com/YoussefAmrRagab/Clothing-Mart/assets/114784684/372e911b-aec1-447c-8265-96c1466e5335" alt="Screenshot 2" style="width: 200px; height: auto; margin-right: 10px;">
 </div>
 
 Welcome to the Flutter Clothing Mart App! This project is a mobile application developed using Flutter, Firebase Authentication, Firebase Realtime Database, Cloud Firestore, and Cloud Storage for Firebase. The app allows users to browse and shop for clothes, manage their cart, save favorite items, and update their profile settings.
@@ -29,9 +27,9 @@ Welcome to the Flutter Clothing Mart App! This project is a mobile application d
 - 📄 **Clothing Details**: Shows the image, description, brand, price, available sizes, and an option to add items to the cart.
 - ➕ **Counter**: Allows users to select the quantity of items they want to purchase.
 
-### Cart Screen
+### Checkout Screen
 
-- 🛒 **Cart Display**: Shows all clothing items added to the cart.
+- 🛒 **Checkout Display**: Shows all clothing items added to the cart.
 - 💰 **Total Price Calculation**: Calculates the total price of all items in the cart.
 
 ### Favorite Screen
