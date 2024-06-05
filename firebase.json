@@ -1,0 +1,22 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "clothing-mart-2244",
+          "appId": "1:1028966441659:android:a53972126817417f963f9e",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "clothing-mart-2244",
+          "configurations": {
+            "android": "1:1028966441659:android:a53972126817417f963f9e",
+            "ios": "1:1028966441659:ios:12d100757089aa48963f9e"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1028966441659",
+    "project_id": "clothing-mart-2244",
+    "storage_bucket": "clothing-mart-2244.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028966441659:android:a53972126817417f963f9e",
+        "android_client_info": {
+          "package_name": "com.example.clothing_mart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWeSrYdgQ5KogRb4sk-zdh3_qMeT-Ufso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
