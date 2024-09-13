@@ -6,9 +6,9 @@ class ProductDTO {
   List<String> sizes;
   bool isFavourite = false;
 
-  String get minWeight => weight.split("-")[0];
+  int get minWeight => int.parse(weight.split("-")[0]);
 
-  String get maxWeight => weight.split("-")[1];
+  int get maxWeight => int.parse(weight.split("-")[1]);
 
   ProductDTO({
     required this.category,
@@ -29,6 +29,7 @@ class ProductDTO {
     if (imageUrl == "") {
       imageUrl = "products/$id.png";
     }
+    gender = gender == 'women' ? 'Female' : 'Male';
   }
 
   factory ProductDTO.fromJson(

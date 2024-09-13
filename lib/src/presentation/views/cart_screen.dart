@@ -17,10 +17,10 @@ class CartScreen extends StatelessWidget {
       children: [
         Expanded(
           child: Consumer<AppProvider>(
-            builder: (_, __, ___) => provider.user.cart.isEmpty
+            builder: (_, __, ___) => provider.user!.cart.isEmpty
                 ? const SizedBox()
                 : ListView.builder(
-                    itemCount: provider.user.cart.length,
+                    itemCount: provider.user!.cart.length,
                     itemBuilder: (_, index) {
                       return Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -29,7 +29,7 @@ class CartScreen extends StatelessWidget {
                             Row(
                               children: [
                                 ImageNetwork(
-                                  imageUrl: provider.user.cart[index].imageUrl,
+                                  imageUrl: provider.user!.cart[index].imageUrl,
                                   padding: const EdgeInsets.all(Dimensions.s10),
                                   circularProgressIndicatorColor:
                                       ColorManager.primaryColor,
@@ -51,21 +51,21 @@ class CartScreen extends StatelessWidget {
                                             MediaQuery.sizeOf(context).width /
                                                 2.8,
                                         child: Text(
-                                          provider.user.cart[index].name,
+                                          provider.user!.cart[index].name,
                                           style: TextStyles.encodeSansW800S18,
                                         ),
                                       ),
                                       Text(
-                                        "Size: ${provider.user.cart[index].size!}",
+                                        "Size: ${provider.user!.cart[index].size!}",
                                         style: TextStyles.encodeSansW200S14,
                                       ),
                                       Text(
-                                        provider.user.cart[index].brand,
+                                        provider.user!.cart[index].brand,
                                         style: TextStyles.greyEncodeSansW100S12,
                                       ),
                                       10.marginHeight,
                                       Text(
-                                          "${provider.user.cart[index].price}\$"),
+                                          "${provider.user!.cart[index].price}\$"),
                                     ],
                                   ),
                                 ),
@@ -83,7 +83,7 @@ class CartScreen extends StatelessWidget {
                                         GestureDetector(
                                           onTap: () {
                                             provider.decrementProductCount(
-                                                provider.user.cart[index]);
+                                                provider.user!.cart[index]);
                                           },
                                           child: const Icon(
                                             Icons.remove_rounded,
@@ -92,7 +92,7 @@ class CartScreen extends StatelessWidget {
                                         ),
                                         Consumer<AppProvider>(
                                           builder: (_, __, ___) => Text(
-                                            "${provider.user.cart[index].count}",
+                                            "${provider.user!.cart[index].count}",
                                             style: TextStyles
                                                 .whiteEncodeSansW800S18,
                                           ),
@@ -100,7 +100,7 @@ class CartScreen extends StatelessWidget {
                                         GestureDetector(
                                           onTap: () {
                                             provider.incrementProductCount(
-                                                provider.user.cart[index]);
+                                                provider.user!.cart[index]);
                                           },
                                           child: const Icon(
                                             Icons.add_rounded,
@@ -111,7 +111,7 @@ class CartScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            index == provider.user.cart.length - 1
+                            index == provider.user!.cart.length - 1
                                 ? Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -169,13 +169,13 @@ class CartScreen extends StatelessWidget {
                                         children: [
                                           Consumer<AppProvider>(
                                             builder: (_, __, ___) => Text(
-                                                "Total (${provider.user.cart.fold(0, (previousValue, element) => previousValue + element.count)} items)",
+                                                "Total (${provider.user!.cart.fold(0, (previousValue, element) => previousValue + element.count)} items)",
                                                 style: TextStyles
                                                     .encodeSansW200S14),
                                           ),
                                           Consumer<AppProvider>(
                                             builder: (_, __, ___) => Text(
-                                                "${provider.user.cart.fold(0.0, (previousValue, element) => previousValue + (element.price * element.count))}\$",
+                                                "${provider.user!.cart.fold(0.0, (previousValue, element) => previousValue + (element.price * element.count))}\$",
                                                 style: TextStyles
                                                     .encodeSansW800S12),
                                           )
@@ -209,7 +209,7 @@ class CartScreen extends StatelessWidget {
                                                   TextStyles.encodeSansW200S14),
                                           Consumer<AppProvider>(
                                             builder: (_, __, ___) => Text(
-                                                "${provider.user.cart.fold(0.0, (previousValue, element) => previousValue + (element.price * element.count))}\$",
+                                                "${provider.user!.cart.fold(0.0, (previousValue, element) => previousValue + (element.price * element.count))}\$",
                                                 style: TextStyles
                                                     .encodeSansW800S12),
                                           )

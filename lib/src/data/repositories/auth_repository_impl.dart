@@ -69,7 +69,7 @@ class AuthRepositoryImpl implements AuthRepository {
         FailureEither<void> responseImage =
             await executeAndHandleError(() async {
           await _remoteServices.storageService
-              .uploadUserImage(user, File(userImagePath));
+              .uploadUserImage('users/${user.id}', File(userImagePath));
         });
         return responseImage.fold(
           (failure) => failure.message.toString(),

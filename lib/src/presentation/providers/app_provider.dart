@@ -17,13 +17,30 @@ class AppProvider extends ChangeNotifier {
   int index = 0;
 
   bool isAnimatingEnd = false;
+  bool isLoading = false;
 
   List<ProductDTO> _originalProducts = [];
   final List<ProductDTO> _filteredProducts = [];
 
-  List<ProductDTO> get products =>
-      _filteredProducts.isNotEmpty ? _filteredProducts : _originalProducts;
-  late UserDTO user;
+  List<ProductDTO> get products => _filteredProducts.isNotEmpty
+      ? _filteredProducts
+      : _filterText != ''
+          ? []
+          : _originalProducts;
+
+  UserDTO? user;
+  List<String> _categories = ['All'];
+  String _filterText = '';
+
+  set categories(List<String> value) {
+    _categories = value;
+    filterProducts();
+  }
+
+  set filterText(String value) {
+    _filterText = value;
+    filterProducts();
+  }
 
   Future<String> fetchData() async {
     final userResponse = await _repository.getUser();
@@ -41,8 +58,10 @@ class AppProvider extends ChangeNotifier {
     }
     _originalProducts = products;
 
-    for (var e in user.favourites) {
-      int index = this.products.indexWhere((element) => element.id == e.id);
+    for (var product in user!.favourites) {
+      product.isFavourite = true;
+      int index =
+          this.products.indexWhere((element) => element.id == product.id);
       if (index > -1) {
         this.products[index].isFavourite = true;
       }
@@ -53,33 +72,49 @@ class AppProvider extends ChangeNotifier {
 
   void onFavouriteClick(ProductDTO product) {
     product.isFavourite
-        ? user.deleteFromFavourite(product)
-        : user.addToFavourite(product);
-    _repository.updateUserFavourites(user.favouriteAsMap);
+        ? user!.deleteFromFavourite(product)
+        : user!.addToFavourite(product);
+    product.isFavourite = !product.isFavourite;
+    products.firstWhere((element) => element.id == product.id).isFavourite =
+        product.isFavourite;
+    _repository.updateUserFavourites(user!.favouriteAsMap);
     notifyListeners();
   }
 
-  void filterProducts(List<String> filtersText) {
+  void filterProducts() {
     _filteredProducts.clear();
-    for (var filterText in filtersText) {
-      _filteredProducts.addAll(
-        _originalProducts.where(
-          (element) =>
-              filterText == 'All' ? true : element.category == filterText,
-        ),
+    if (_categories.isNotEmpty) {
+      for (var filterText in _categories) {
+        _filteredProducts.addAll(
+          _originalProducts.where((element) => filterText == 'All'
+              ? true
+              : filterText == "Recommendation Outfits"
+                  ? element.gender == user!.gender &&
+                      user!.weight >= element.minWeight &&
+                      user!.weight <= element.maxWeight
+                  : element.category == filterText),
+        );
+      }
+    }
+    if (_filterText != '' && _filterText.trim().isNotEmpty) {
+      _filteredProducts.retainWhere(
+        (element) => element.name
+            .toLowerCase()
+            .startsWith(_filterText.trim().toLowerCase()),
       );
-      debugPrint(filterText);
     }
     notifyListeners();
   }
 
-  void addToCart(ProductDTO product, int numOfItem) {
+  String addToCart(ProductDTO product, int numOfItem) {
     if (product.size == null) {
-      return;
+      return "Please select your size first";
+    } else {
+      user!.addToCart(product, numOfItem);
+      _repository.updateUserCart(user!.cartAsMap);
+      notifyListeners();
+      return StringManager.success;
     }
-    user.addToCart(product, numOfItem);
-    _repository.updateUserCart(user.cartAsMap);
-    notifyListeners();
   }
 
   void changeIndex(int index) {
@@ -96,14 +131,17 @@ class AppProvider extends ChangeNotifier {
     if (product.count == 99) {
       return;
     }
-    user.addToCart(product, 1);
-    _repository.updateUserCart(user.cartAsMap);
+    user!.addToCart(product, 1);
+    _repository.updateUserCart(user!.cartAsMap);
     notifyListeners();
   }
 
   void decrementProductCount(ProductDTO product) {
-    user.deleteFromCart(product, 1);
-    _repository.updateUserCart(user.cartAsMap);
+    user!.deleteFromCart(product, 1);
+    _repository.updateUserCart(user!.cartAsMap);
+    if (user!.cart.isEmpty) {
+      isAnimatingEnd = false;
+    }
     notifyListeners();
   }
 
@@ -113,7 +151,7 @@ class AppProvider extends ChangeNotifier {
 
   String get femaleOption => _options[1];
 
-  late String _currentOption = user.gender;
+  late String _currentOption = user!.gender;
 
   String get currentOption => _currentOption;
 
@@ -122,10 +160,8 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  late String _birthdate = user.birthday;
-
   set birthdate(String date) {
-    _birthdate = date;
+    user!.birthday = date;
     notifyListeners();
   }
 
@@ -138,24 +174,41 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String updateUser(
+  Future<void> updateUser(
     String name,
     String birthday,
     String weight,
     String height,
-  ) {
+    Function() onSuccess,
+    Function(String msg) onFailure,
+  ) async {
+    isLoading = true;
+    notifyListeners();
+
     String? validation = isValid(name, birthday, weight, height);
     if (validation == null) {
-      user.name = name;
-      user.birthday = birthday;
-      user.gender = _currentOption;
-      user.weight = int.parse(weight);
-      user.height = int.parse(height);
-      _repository.updateUserData(user);
-      notifyListeners();
-      return "updated";
+      bool requireUpdate =
+          user!.weight != int.parse(weight) || user!.gender != _currentOption;
+      user!.name = name;
+      user!.birthday = birthday;
+      user!.gender = _currentOption;
+      user!.weight = int.parse(weight);
+      user!.height = int.parse(height);
+      var res = await _repository.updateUserData(user!, _selectedImage?.path);
+      if (res == StringManager.success) {
+        if (requireUpdate) {
+          filterProducts();
+        }
+        onSuccess();
+      } else {
+        onFailure(res.toString());
+      }
+    } else {
+      onFailure(validation);
     }
-    return validation;
+
+    isLoading = false;
+    notifyListeners();
   }
 
   String? isValid(
@@ -174,5 +227,16 @@ class AppProvider extends ChangeNotifier {
       return StringManager.heightFieldEmpty;
     }
     return null;
+  }
+
+  Future<void> logout() async {
+    await _repository.logout();
+    user = null;
+    _selectedImage = null;
+    _filteredProducts.clear();
+    _originalProducts.clear();
+    _categories = ['All'];
+    _filterText = '';
+    index = 0;
   }
 }

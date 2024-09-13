@@ -12,6 +12,7 @@ import '../../config/themes/dimens.dart';
 import '../../domain/models/product_dto.dart';
 import '../../config/themes/colors.dart';
 import '../providers/app_provider.dart';
+import '../widgets/animated_snackbar.dart';
 import '../widgets/circular_button.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -192,7 +193,43 @@ class DetailsScreen extends StatelessWidget {
                         size: detailsProvider.selectedSize,
                         imageUrl: product.imageUrl,
                       );
-                      provider.addToCart(item, detailsProvider.count);
+                      String res =
+                          provider.addToCart(item, detailsProvider.count);
+                      if (res == StringManager.success) {
+                        AnimatedSnackBar.show(
+                          context: context,
+                          message: const Text(
+                            "Your item has added to your cart",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          icon: const Icon(
+                            Icons.done_rounded,
+                            color: Colors.green,
+                            size: 30,
+                          ),
+                        );
+                      } else {
+                        AnimatedSnackBar.show(
+                          context: context,
+                          message: Text(
+                            res,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: Colors.red,
+                            size: 30,
+                          ),
+                        );
+                      }
                     },
                   ),
                   10.marginHeight,

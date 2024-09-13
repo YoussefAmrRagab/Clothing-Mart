@@ -1,82 +1,116 @@
 import 'package:flutter/material.dart';
 
 class HomeProvider extends ChangeNotifier {
-  bool chip1 = true;
-  bool chip2 = false;
-  bool chip3 = false;
-  bool chip4 = false;
-  bool chip5 = false;
+  bool allChips = true;
+  bool smartCasualChip = false;
+  bool uniChip = false;
+  bool sportyChip = false;
+  bool formalChip = false;
+  bool recommendationChip = false;
 
-  List<String> toggleChip1() {
-    chip1 = !chip1;
-    if (chip1 && (chip2 || chip3 || chip4 || chip5)) {
-      chip1 = true;
-      chip2 = false;
-      chip3 = false;
-      chip4 = false;
-      chip5 = false;
+  List<String> toggleChip(String chipType) {
+    switch (chipType) {
+      case 'all':
+        _resetAllChips();
+        allChips = true;
+        break;
+      case 'smartCasual':
+        smartCasualChip = !smartCasualChip;
+        break;
+      case 'uni':
+        uniChip = !uniChip;
+        break;
+      case 'sporty':
+        sportyChip = !sportyChip;
+        break;
+      case 'formal':
+        formalChip = !formalChip;
+        break;
+      case 'recommendation':
+        recommendationChip = !recommendationChip;
+        if (recommendationChip) {
+          _resetAllChips();
+          recommendationChip = true;
+        } else {
+          allChips = true;
+        }
+        break;
     }
+
+    if (chipType != 'all' && chipType != 'recommendation') {
+      _checkAndHandleChipSelection();
+    }
+
     notifyListeners();
-    return _filtersText;
+    return filtersText;
   }
 
-  List<String> toggleChip2() {
-    chip2 = !chip2;
-    _checkIfAllItemIsSelected();
-    notifyListeners();
-    return _filtersText;
-  }
-
-  List<String> toggleChip3() {
-    chip3 = !chip3;
-    _checkIfAllItemIsSelected();
-    notifyListeners();
-    return _filtersText;
-  }
-
-  List<String> toggleChip4() {
-    chip4 = !chip4;
-    _checkIfAllItemIsSelected();
-    notifyListeners();
-    return _filtersText;
-  }
-
-  List<String> toggleChip5() {
-    chip5 = !chip5;
-    _checkIfAllItemIsSelected();
-    notifyListeners();
-    return _filtersText;
+  void _resetAllChips() {
+    allChips = false;
+    smartCasualChip = false;
+    uniChip = false;
+    sportyChip = false;
+    formalChip = false;
+    recommendationChip = false;
   }
 
   void _checkIfAllItemIsSelected() {
-    chip1 = false;
-    bool allChipIsSelected = chip2 && chip3 && chip4 && chip5;
-    bool allChipNotSelected = !chip2 && !chip3 && !chip4 && !chip5;
-    if (allChipIsSelected) {
-      chip1 = true;
-      chip2 = false;
-      chip3 = false;
-      chip4 = false;
-      chip5 = false;
-    } else if (allChipNotSelected) {
-      chip1 = true;
+    allChips = false;
+    bool allChipSelected =
+        smartCasualChip && uniChip && sportyChip && formalChip;
+    if (allChipSelected) {
+      _resetAllChips();
+      allChips = true;
     }
+    if (recommendationChip) {
+      recommendationChip = false;
+    }
+    notifyListeners();
   }
 
-  List<String> get _filtersText {
+  void _checkAndHandleChipSelection() {
+    bool isAllChipsSelected = false;
+    bool isAnyChipSelected =
+        smartCasualChip || uniChip || sportyChip || formalChip;
+
+    if (isAnyChipSelected) {
+      isAllChipsSelected =
+          smartCasualChip && uniChip && sportyChip && formalChip;
+      if (isAllChipsSelected) {
+        _resetAllChips();
+        allChips = true;
+      } else {
+        allChips = false;
+      }
+    } else {
+      _resetAllChips();
+      allChips = true;
+    }
+
+    if (recommendationChip) {
+      recommendationChip = false;
+    }
+
+    notifyListeners();
+  }
+
+  List<String> get filtersText {
     List<String> selectedFilters = [];
 
-    if (chip2) {
+    if (smartCasualChip) {
       selectedFilters.add("Smart-Casual Outfits");
     }
-    if (chip3) {
+    if (uniChip) {
       selectedFilters.add("Uni Outfits");
     }
-    if (chip4) {
+    if (sportyChip) {
       selectedFilters.add("Sporty Outfits");
     }
-    if (chip5) {
+    if (formalChip) {
       selectedFilters.add("Formal Outfits");
+    }
+    if (recommendationChip) {
+      selectedFilters.add("Recommendation Outfits");
     }
 
     if (selectedFilters.isEmpty) {

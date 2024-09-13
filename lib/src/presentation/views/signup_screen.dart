@@ -1,18 +1,17 @@
 import 'dart:io';
-
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
+import '../../util/constants.dart';
+import '../../util/extensions.dart';
 import '../widgets/custom_radio.dart';
 import '../widgets/custom_button.dart';
-import '../../config/router/routes_name.dart';
-import '../../presentation/providers/signup_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../config/themes/colors.dart';
-import '../../presentation/widgets/custom_text_form_field.dart';
-import '../../util/extensions.dart';
-import '../../util/constants.dart';
-import '../../config/themes/strings.dart';
 import '../../config/themes/dimens.dart';
+import '../../config/themes/strings.dart';
+import '../../config/router/routes_name.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../presentation/providers/signup_provider.dart';
+import '../../presentation/widgets/custom_text_form_field.dart';
 
 class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});
@@ -235,7 +234,7 @@ class SignupScreen extends StatelessWidget {
         provider.selectImage =
             await ImagePicker().pickImage(source: ImageSource.gallery);
       },
-      overlayColor: const MaterialStatePropertyAll(Colors.white),
+      overlayColor: const WidgetStatePropertyAll(Colors.white),
       child: Stack(
         alignment: Alignment.bottomRight,
         children: [
@@ -264,7 +263,9 @@ class SignupScreen extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(
-                right: Dimensions.s6, bottom: Dimensions.s2),
+              right: Dimensions.s6,
+              bottom: Dimensions.s2,
+            ),
             decoration: BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.circular(Dimensions.s100),

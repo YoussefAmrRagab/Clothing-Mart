@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton(
-      {super.key,
-      required this.height,
-      this.icon,
-      required this.text,
-      required this.color,
-      required this.onPressed,
-      required this.borderRadius,
-      this.fontColor = Colors.white,
-      this.fontSize,
-      this.isThirdPartyLoginButton = false,
-      required this.isLoading,
-      required this.circularProgressIndicatorSize});
+  const CustomButton({
+    super.key,
+    required this.height,
+    this.icon,
+    required this.text,
+    required this.color,
+    required this.onPressed,
+    required this.borderRadius,
+    this.fontColor = Colors.white,
+    this.fontSize,
+    this.isThirdPartyLoginButton = false,
+    required this.isLoading,
+    required this.circularProgressIndicatorSize,
+    this.width,
+  });
 
   final double height;
+  final double? width;
   final Widget? icon;
   final String text;
   final VoidCallback onPressed;
@@ -30,7 +33,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: width ?? double.infinity,
       height: height,
       child: isThirdPartyLoginButton
           ? ElevatedButton.icon(

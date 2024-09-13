@@ -1,22 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_svg/svg.dart';
-import '../../config/router/routes_name.dart';
-import 'package:provider/provider.dart';
-import '../../presentation/providers/home_provider.dart';
-import '../../util/extensions.dart';
-import '../../presentation/providers/app_provider.dart';
+import 'package:lottie/lottie.dart';
+
 import '../../util/constants.dart';
+import '../../util/extensions.dart';
+import 'package:flutter_svg/svg.dart';
+import '../widgets/product_card.dart';
+import '../widgets/image_network.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../config/themes/colors.dart';
 import '../../config/themes/dimens.dart';
 import '../widgets/custom_filter_chip.dart';
-import '../widgets/image_network.dart';
-import '../widgets/product_card.dart';
+import '../../config/router/routes_name.dart';
+import '../../presentation/providers/app_provider.dart';
+import '../../presentation/providers/home_provider.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-
-  final TextEditingController _searchController = TextEditingController();
 
   final OutlineInputBorder outlineInputBorderStyle = OutlineInputBorder(
     borderRadius: BorderRadius.circular(12),
@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           header(provider),
-          searchAndFilterBar(),
+          searchAndFilterBar(provider),
           6.marginHeight,
           chipGroup(homeProvider, provider),
           4.marginHeight,
@@ -41,26 +41,34 @@ class HomeScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Consumer<AppProvider>(
-                builder: (_, __, ___) => MasonryGridView.builder(
-                  itemCount: provider.products.length,
-                  gridDelegate:
-                      const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  itemBuilder: (_, index) => ProductCard(
-                    product: provider.products[index],
-                    listLength: provider.products.length,
-                    isFavourite: provider.products[index].isFavourite,
-                    productIndex: index,
-                    onFavouriteClick: () =>
-                        provider.onFavouriteClick(provider.products[index]),
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      RoutesName.detailsRoute,
-                      arguments: provider.products[index],
-                    ),
-                  ),
-                ),
+                builder: (_, __, ___) => provider.products.isEmpty
+                    ? Center(
+                        child: Lottie.asset(
+                          Constants.emptySearchAsset,
+                          width: 280,
+                          height: 280,
+                        ),
+                      )
+                    : MasonryGridView.builder(
+                        itemCount: provider.products.length,
+                        gridDelegate:
+                            const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemBuilder: (_, index) => ProductCard(
+                          product: provider.products[index],
+                          listLength: provider.products.length,
+                          isFavourite: provider.products[index].isFavourite,
+                          productIndex: index,
+                          onFavouriteClick: () => provider
+                              .onFavouriteClick(provider.products[index]),
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            RoutesName.detailsRoute,
+                            arguments: provider.products[index],
+                          ),
+                        ),
+                      ),
               ),
             ),
           ),
@@ -79,72 +87,74 @@ class HomeScreen extends StatelessWidget {
         children: [
           16.marginWidth,
           Selector<HomeProvider, bool>(
-            selector: (_, provider) => provider.chip1,
+            selector: (_, provider) => provider.allChips,
             builder: (_, value, __) => CustomFilterChip(
               text: 'All Items',
               onClick: () {
-                List<String> filtersText = homeProvider.toggleChip1();
-                provider.filterProducts(filtersText);
+                List<String> filtersText = homeProvider.toggleChip('all');
+                provider.categories = filtersText;
               },
               isSelected: value,
             ),
           ),
           10.marginWidth,
           Selector<HomeProvider, bool>(
-            selector: (_, provider) => false,
+            selector: (_, provider) => provider.recommendationChip,
             builder: (_, value, __) => CustomFilterChip(
               text: 'Recommendation',
               onClick: () {
-                // List<String> filtersText = homeProvider.toggleChip2();
-                // provider.filterProducts(filtersText);
+                List<String> filtersText =
+                    homeProvider.toggleChip('recommendation');
+                provider.categories = filtersText;
               },
               isSelected: value,
             ),
           ),
           10.marginWidth,
           Selector<HomeProvider, bool>(
-            selector: (_, provider) => provider.chip2,
+            selector: (_, provider) => provider.smartCasualChip,
             builder: (_, value, __) => CustomFilterChip(
               text: 'Smart Casual Outfits',
               onClick: () {
-                List<String> filtersText = homeProvider.toggleChip2();
-                provider.filterProducts(filtersText);
+                List<String> filtersText =
+                    homeProvider.toggleChip('smartCasual');
+                provider.categories = filtersText;
               },
               isSelected: value,
             ),
           ),
           10.marginWidth,
           Selector<HomeProvider, bool>(
-            selector: (_, provider) => provider.chip3,
+            selector: (_, provider) => provider.uniChip,
             builder: (_, value, __) => CustomFilterChip(
               text: 'Uni Outfits',
               onClick: () {
-                List<String> filtersText = homeProvider.toggleChip3();
-                provider.filterProducts(filtersText);
+                List<String> filtersText = homeProvider.toggleChip('uni');
+                provider.categories = filtersText;
               },
               isSelected: value,
             ),
           ),
           10.marginWidth,
           Selector<HomeProvider, bool>(
-            selector: (_, provider) => provider.chip4,
+            selector: (_, provider) => provider.sportyChip,
             builder: (_, value, __) => CustomFilterChip(
               text: 'Sporty Outfits',
               onClick: () {
-                List<String> filtersText = homeProvider.toggleChip4();
-                provider.filterProducts(filtersText);
+                List<String> filtersText = homeProvider.toggleChip('sporty');
+                provider.categories = filtersText;
               },
               isSelected: value,
             ),
           ),
           10.marginWidth,
           Selector<HomeProvider, bool>(
-            selector: (_, provider) => provider.chip5,
+            selector: (_, provider) => provider.formalChip,
             builder: (_, value, __) => CustomFilterChip(
               text: 'Formal Outfits',
               onClick: () {
-                List<String> filtersText = homeProvider.toggleChip5();
-                provider.filterProducts(filtersText);
+                List<String> filtersText = homeProvider.toggleChip('formal');
+                provider.categories = filtersText;
               },
               isSelected: value,
             ),
@@ -155,7 +165,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Row searchAndFilterBar() {
+  Row searchAndFilterBar(AppProvider appProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,24 +173,29 @@ class HomeScreen extends StatelessWidget {
         SizedBox(
           height: 54,
           width: 265,
-          child: TextFormField(
-            controller: _searchController,
-            style: const TextStyle(
-              fontSize: 16,
-              height: 1,
-            ),
-            decoration: InputDecoration(
-              prefixIcon: Icon(
-                Icons.search_rounded,
-                color: ColorManager.grey2Color,
+          child: Consumer<HomeProvider>(
+            builder: (_, provider, ___) => TextFormField(
+              cursorColor: ColorManager.primaryColor,
+              onChanged: (value) {
+                appProvider.filterText = value;
+              },
+              style: const TextStyle(
+                fontSize: 16,
+                height: 1,
               ),
-              hintText: 'Search clothes. . .',
-              hintStyle: const TextStyle(
-                fontFamily: 'EncodeSans',
-                fontWeight: FontWeight.w400,
+              decoration: InputDecoration(
+                prefixIcon: Icon(
+                  Icons.search_rounded,
+                  color: ColorManager.grey2Color,
+                ),
+                hintText: 'Search clothes. . .',
+                hintStyle: const TextStyle(
+                  fontFamily: 'EncodeSans',
+                  fontWeight: FontWeight.w400,
+                ),
+                enabledBorder: outlineInputBorderStyle,
+                focusedBorder: outlineInputBorderStyle,
               ),
-              enabledBorder: outlineInputBorderStyle,
-              focusedBorder: outlineInputBorderStyle,
             ),
           ),
         ),
@@ -226,7 +241,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                provider.user.name,
+                provider.user!.name,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
@@ -234,7 +249,7 @@ class HomeScreen extends StatelessWidget {
               )
             ],
           ),
-          userImage(provider.user.imageUrl),
+          userImage(provider.user!.imageUrl),
         ],
       ),
     );

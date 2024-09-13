@@ -30,6 +30,14 @@ extension StringExtensions on String {
     return passwordRegex.hasMatch(this);
   }
 
+  bool get isValidURL {
+    // Regular expression for a valid URL
+    const pattern = r'(http|https)://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\S*)';
+    final regExp = RegExp(pattern);
+
+    return regExp.hasMatch(this);
+  }
+
   bool get isValidEmail {
     // Regular expression for a basic email validation
     final RegExp emailRegex = RegExp(

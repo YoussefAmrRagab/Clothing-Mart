@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../config/themes/strings.dart';
 
 import '../../util/extensions.dart';
@@ -100,10 +103,24 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<void> updateUserData(UserDTO user) async =>
-      await executeAndHandleError<void>(() async {
-        return await _dataSource.firebaseService.updateUser(user);
-      });
+  Future<dynamic> updateUserData(UserDTO user, String? userImage) async {
+    FailureEither<void> response = await executeAndHandleError<void>(() async {
+      if (userImage != null) {
+        if (user.imageUrl != "") {
+          await _dataSource.storageService.deleteImage('users/${user.id}');
+        }
+        await _dataSource.storageService
+            .uploadUserImage('users/${user.id}', File(userImage));
+        user.imageUrl =
+            await _dataSource.storageService.getImageUrl('users/${user.id}');
+      }
+      return await _dataSource.firebaseService.updateUser(user);
+    });
+    return response.fold(
+      (failure) => failure.message,
+      (_) => StringManager.success,
+    );
+  }
 
   @override
   Future<void> updateUserFavourites(
@@ -137,4 +154,9 @@ class RepositoryImpl implements Repository {
       return left(failure);
     }
   }
+
+  @override
+  Future<void> logout() async => await executeAndHandleError<void>(() async {
+        return await _dataSource.authService.logout();
+      });
 }

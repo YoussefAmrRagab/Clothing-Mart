@@ -1,3 +1,5 @@
+import 'package:clothing_mart/src/util/extensions.dart';
+
 import 'product_dto.dart';
 
 class UserDTO {
@@ -27,12 +29,10 @@ class UserDTO {
 
   void addToFavourite(ProductDTO product) {
     favourites.add(product);
-    product.isFavourite = true;
   }
 
   void deleteFromFavourite(ProductDTO product) {
     favourites.removeWhere((element) => element.id == product.id);
-    product.isFavourite = false;
   }
 
   void addToCart(ProductDTO product, int numOfItem) {
@@ -81,7 +81,7 @@ class UserDTO {
       'weight': weight,
       'height': height,
       'gender': gender,
-      'imageUrl': "users/$id",
+      'imageUrl': imageUrl.isValidURL ? "users/$id" : "",
       'favourites': favouriteAsMap,
       'cart': cartAsMap
     };

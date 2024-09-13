@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:clothing_mart/src/config/router/routes_name.dart';
+import 'package:clothing_mart/src/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../presentation/widgets/image_network.dart';
@@ -10,6 +12,7 @@ import '../../util/constants.dart';
 import '../../config/themes/colors.dart';
 import '../../config/themes/dimens.dart';
 import '../providers/app_provider.dart';
+import '../widgets/animated_snackbar.dart';
 import '../widgets/custom_radio.dart';
 import '../widgets/custom_text_form_field.dart';
 
@@ -20,15 +23,15 @@ class SettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context, listen: false);
     final TextEditingController emailController =
-        TextEditingController(text: provider.user.email);
+        TextEditingController(text: provider.user!.email);
     final TextEditingController usernameController =
-        TextEditingController(text: provider.user.name);
+        TextEditingController(text: provider.user!.name);
     final TextEditingController birthdayController =
-        TextEditingController(text: provider.user.birthday);
+        TextEditingController(text: provider.user!.birthday);
     final TextEditingController weightController =
-        TextEditingController(text: provider.user.weight.toString());
+        TextEditingController(text: provider.user!.weight.toString());
     final TextEditingController heightController =
-        TextEditingController(text: provider.user.height.toString());
+        TextEditingController(text: provider.user!.height.toString());
 
     return SizedBox(
       height: context.screenHeight,
@@ -49,13 +52,13 @@ class SettingScreen extends StatelessWidget {
             margin: EdgeInsets.only(
               left: MediaQuery.sizeOf(context).width / 12,
               right: MediaQuery.sizeOf(context).width / 12,
-              top: 130,
+              top: 150,
             ),
             elevation: 6,
             color: Colors.white,
             child: Container(
               padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
-              height: 520,
+              height: 490,
               width: MediaQuery.sizeOf(context).width,
               child: Column(children: [
                 CustomTextFormField(
@@ -85,24 +88,82 @@ class SettingScreen extends StatelessWidget {
                 6.marginHeight,
                 radioGroup(context, provider),
                 8.marginHeight,
-                ElevatedButton(
-                  onPressed: () {
-                    String res = provider.updateUser(
-                      usernameController.text,
-                      birthdayController.text,
-                      weightController.text,
-                      heightController.text,
-                    );
-
-                    res.showToast;
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll(ColorManager.primaryColor),
-                    foregroundColor:
-                        const MaterialStatePropertyAll(Colors.white),
-                  ),
-                  child: const Text("Save"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Selector<AppProvider, bool>(
+                      selector: (_, provider) => provider.isLoading,
+                      builder: (_, loading, __) =>  CustomButton(
+                        height: 40,
+                        text: 'Save',
+                        color: ColorManager.primaryColor,
+                        onPressed: () {
+                          provider.updateUser(
+                            usernameController.text,
+                            birthdayController.text,
+                            weightController.text,
+                            heightController.text,
+                            () {
+                              AnimatedSnackBar.show(
+                                context: context,
+                                message: const Text(
+                                  "Your info. has been updated",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.done_rounded,
+                                  color: Colors.green,
+                                  size: 30,
+                                ),
+                              );
+                            },
+                            (msg) {
+                              AnimatedSnackBar.show(
+                                context: context,
+                                message: Text(
+                                  msg,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.close_rounded,
+                                  color: Colors.red,
+                                  size: 30,
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        width: 100,
+                        borderRadius: 20,
+                        isLoading: loading,
+                        circularProgressIndicatorSize: 18,
+                      ),
+                    ),
+                    20.0.marginWidth,
+                    ElevatedButton(
+                      onPressed: () {
+                        provider.logout();
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          RoutesName.loginRoute,
+                          (Route<dynamic> route) => false, // This removes all routes from the stack
+                        );
+                      },
+                      style: const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(Colors.red),
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                      ),
+                      child: const Text("Logout"),
+                    ),
+                  ],
                 ),
               ]),
             ),
@@ -134,9 +195,9 @@ class SettingScreen extends StatelessWidget {
         DateTime? date = await showDatePicker(
           context: context,
           initialDate: DateTime(
-            int.parse(provider.user.birthday.split('-')[2]),
-            int.parse(provider.user.birthday.split('-')[1]),
-            int.parse(provider.user.birthday.split('-')[0]),
+            int.parse(provider.user!.birthday.split('-')[2]),
+            int.parse(provider.user!.birthday.split('-')[1]),
+            int.parse(provider.user!.birthday.split('-')[0]),
           ),
           firstDate: DateTime(Constants.firstDate),
           lastDate: DateTime(Constants.lastDate),
@@ -237,7 +298,7 @@ class SettingScreen extends StatelessWidget {
               child: CircleAvatar(
                 radius: Dimensions.s40,
                 backgroundColor: ColorManager.primaryColor,
-                child: provider.user.imageUrl == "" && userImage == null
+                child: provider.user!.imageUrl == "" && userImage == null
                     ? Padding(
                         padding: const EdgeInsets.all(Dimensions.s16),
                         child: Image.asset(
@@ -253,7 +314,7 @@ class SettingScreen extends StatelessWidget {
                             height: Dimensions.s80,
                           )
                         : ImageNetwork(
-                            imageUrl: provider.user.imageUrl,
+                            imageUrl: provider.user!.imageUrl,
                             fit: BoxFit.cover,
                             circularProgressIndicatorColor:
                                 ColorManager.primaryColor,

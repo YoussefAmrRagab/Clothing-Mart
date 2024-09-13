@@ -26,18 +26,20 @@ class MainScreens extends StatelessWidget {
         appBar: appProvider.index == 1
             ? AppBar(
                 backgroundColor: Colors.white,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                  style: ButtonStyle(
-                    side: MaterialStatePropertyAll(
-                      BorderSide(width: 1, color: ColorManager.secondaryColor),
-                    ),
-                  ),
-                  onPressed: () {
-                    appProvider.changeIndex(1);
-                    appProvider.animatingState(false);
-                  },
-                ),
+                leading: appProvider.user!.cart.isEmpty
+                    ? null
+                    : IconButton(
+                        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                        style: ButtonStyle(
+                          side: WidgetStatePropertyAll(
+                            BorderSide(
+                                width: 1, color: ColorManager.secondaryColor),
+                          ),
+                        ),
+                        onPressed: () {
+                          appProvider.animatingState(false);
+                        },
+                      ),
                 title: Text(
                   'Checkout',
                   style: TextStyles.encodeSansW800S24,
@@ -63,41 +65,44 @@ class MainScreens extends StatelessWidget {
               color: Colors.white,
               height: 44,
             ),
-            CustomBottomNavigationBar(
-              radiusSize: 100,
-              height: 62,
-              backgroundColor: ColorManager.primaryColor,
-              index: appProvider.index,
-              icons: const [
-                Icon(
-                  Icons.home_rounded,
-                  color: Colors.white,
-                ),
-                Icon(
-                  Icons.shopping_cart_rounded,
-                  color: Colors.white,
-                ),
-                Icon(
-                  Icons.favorite_rounded,
-                  color: Colors.white,
-                ),
-                Icon(
-                  Icons.settings_rounded,
-                  color: Colors.white,
-                ),
-              ],
-              hoverColor: Colors.white.withOpacity(0.2),
-              onTap: (int index) {
-                appProvider.changeIndex(index);
-                appProvider.animatingState(false);
-              },
-              onAnimatingEnd: () {
-                if (1 == appProvider.index &&
-                    appProvider.user.cart.isNotEmpty) {
-                  appProvider.animatingState(true);
-                }
-              },
-              isAnimatingEnd: appProvider.isAnimatingEnd,
+            Selector<AppProvider, bool>(
+              selector: (_, provider) => provider.isAnimatingEnd,
+              builder: (_, isAnimatingEnd, __) => CustomBottomNavigationBar(
+                radiusSize: 100,
+                height: 62,
+                backgroundColor: ColorManager.primaryColor,
+                index: appProvider.index,
+                icons: const [
+                  Icon(
+                    Icons.home_rounded,
+                    color: Colors.white,
+                  ),
+                  Icon(
+                    Icons.shopping_cart_rounded,
+                    color: Colors.white,
+                  ),
+                  Icon(
+                    Icons.favorite_rounded,
+                    color: Colors.white,
+                  ),
+                  Icon(
+                    Icons.settings_rounded,
+                    color: Colors.white,
+                  ),
+                ],
+                hoverColor: Colors.white.withOpacity(0.2),
+                onTap: (int index) {
+                  appProvider.changeIndex(index);
+                  appProvider.animatingState(false);
+                },
+                onAnimatingEnd: () {
+                  if (1 == appProvider.index &&
+                      appProvider.user!.cart.isNotEmpty) {
+                    appProvider.animatingState(true);
+                  }
+                },
+                isAnimatingEnd: isAnimatingEnd,
+              ),
             ),
           ],
         ),

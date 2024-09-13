@@ -15,22 +15,22 @@ class FavoriteScreen extends StatelessWidget {
 
     return Consumer<AppProvider>(
       builder: (_, __, ___) => MasonryGridView.builder(
-        itemCount: provider.user.favourites.length,
+        itemCount: provider.user!.favourites.length,
         gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
         ),
         itemBuilder: (_, index) => ProductCard(
-          product: provider.user.favourites[index],
+          product: provider.user!.favourites[index],
           isFavourite: true,
           productIndex: index,
           onFavouriteClick: () =>
-              provider.onFavouriteClick(provider.user.favourites[index]),
+              provider.onFavouriteClick(provider.user!.favourites[index]),
           onTap: () => Navigator.pushNamed(
             context,
             RoutesName.detailsRoute,
-            arguments: provider.user.favourites[index],
+            arguments: provider.user!.favourites[index],
           ),
-          listLength: provider.user.favourites.length,
+          listLength: provider.user!.favourites.length,
         ),
       ),
     );

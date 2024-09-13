@@ -5,7 +5,7 @@ abstract class Repository {
 
   Future<dynamic> getUser();
 
-  Future<void> updateUserData(UserDTO user);
+  Future<dynamic> updateUserData(UserDTO user, String? userImage);
 
   Future<void> updateUserFavourites(
     List<Map<String, dynamic>> userFavouritesList,
@@ -14,4 +14,6 @@ abstract class Repository {
   Future<void> updateUserCart(
     List<Map<String, dynamic>> userCartList,
   );
+
+  Future<void> logout();
 }

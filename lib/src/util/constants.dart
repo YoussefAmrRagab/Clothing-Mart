@@ -1,5 +1,6 @@
 class Constants {
   static const String splashAsset = "assets/raw/splash.json";
+  static const String emptySearchAsset = "assets/raw/search_empty.json";
   static const String userAsset = "assets/images/user.png";
   static const String appName = "Online Clothing Store";
   static const String notoSansLinearBFont = "Noto_Sans_Linear_B";
