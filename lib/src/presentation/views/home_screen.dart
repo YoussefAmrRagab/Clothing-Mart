@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           header(provider),
-          searchAndFilterBar(provider),
+          searchAndFilterBar(provider, context),
           6.marginHeight,
           chipGroup(homeProvider, provider),
           4.marginHeight,
@@ -165,14 +165,14 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Row searchAndFilterBar(AppProvider appProvider) {
+  Row searchAndFilterBar(AppProvider appProvider, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
           height: 54,
-          width: 265,
+          width: MediaQuery.sizeOf(context).width - 100,
           child: Consumer<HomeProvider>(
             builder: (_, provider, ___) => TextFormField(
               cursorColor: ColorManager.primaryColor,

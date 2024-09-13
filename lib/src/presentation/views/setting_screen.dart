@@ -56,116 +56,119 @@ class SettingScreen extends StatelessWidget {
             ),
             elevation: 6,
             color: Colors.white,
-            child: Container(
-              padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
-              height: 490,
-              width: MediaQuery.sizeOf(context).width,
-              child: Column(children: [
-                CustomTextFormField(
-                  hintText: 'Name',
-                  isRoundedTextField: true,
-                  controller: usernameController,
-                ),
-                16.marginHeight,
-                CustomTextFormField(
-                  readOnly: true,
-                  hintText: 'Email',
-                  isRoundedTextField: true,
-                  controller: emailController,
-                ),
-                16.marginHeight,
-                datePickerField(
-                  birthdayController,
-                  context,
-                  provider,
-                ),
-                16.marginHeight,
-                weightAndHeightFields(
-                  context,
-                  weightController,
-                  heightController,
-                ),
-                6.marginHeight,
-                radioGroup(context, provider),
-                8.marginHeight,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Selector<AppProvider, bool>(
-                      selector: (_, provider) => provider.isLoading,
-                      builder: (_, loading, __) =>  CustomButton(
-                        height: 40,
-                        text: 'Save',
-                        color: ColorManager.primaryColor,
+            child: IntrinsicHeight(
+              child: Container(
+                padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
+                width: MediaQuery.sizeOf(context).width,
+                child: Column(children: [
+                  CustomTextFormField(
+                    hintText: 'Name',
+                    isRoundedTextField: true,
+                    controller: usernameController,
+                  ),
+                  16.marginHeight,
+                  CustomTextFormField(
+                    readOnly: true,
+                    hintText: 'Email',
+                    isRoundedTextField: true,
+                    controller: emailController,
+                  ),
+                  16.marginHeight,
+                  datePickerField(
+                    birthdayController,
+                    context,
+                    provider,
+                  ),
+                  16.marginHeight,
+                  weightAndHeightFields(
+                    context,
+                    weightController,
+                    heightController,
+                  ),
+                  6.marginHeight,
+                  radioGroup(context, provider),
+                  10.0.marginHeight,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Selector<AppProvider, bool>(
+                        selector: (_, provider) => provider.isLoading,
+                        builder: (_, loading, __) => CustomButton(
+                          height: 40,
+                          text: 'Save',
+                          color: ColorManager.primaryColor,
+                          onPressed: () {
+                            provider.updateUser(
+                              usernameController.text,
+                              birthdayController.text,
+                              weightController.text,
+                              heightController.text,
+                              () {
+                                AnimatedSnackBar.show(
+                                  context: context,
+                                  message: const Text(
+                                    "Your info. has been updated",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  icon: const Icon(
+                                    Icons.done_rounded,
+                                    color: Colors.green,
+                                    size: 30,
+                                  ),
+                                );
+                              },
+                              (msg) {
+                                AnimatedSnackBar.show(
+                                  context: context,
+                                  message: Text(
+                                    msg,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  icon: const Icon(
+                                    Icons.close_rounded,
+                                    color: Colors.red,
+                                    size: 30,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          width: 100,
+                          borderRadius: 20,
+                          isLoading: loading,
+                          circularProgressIndicatorSize: 18,
+                        ),
+                      ),
+                      20.0.marginWidth,
+                      ElevatedButton(
                         onPressed: () {
-                          provider.updateUser(
-                            usernameController.text,
-                            birthdayController.text,
-                            weightController.text,
-                            heightController.text,
-                            () {
-                              AnimatedSnackBar.show(
-                                context: context,
-                                message: const Text(
-                                  "Your info. has been updated",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                icon: const Icon(
-                                  Icons.done_rounded,
-                                  color: Colors.green,
-                                  size: 30,
-                                ),
-                              );
-                            },
-                            (msg) {
-                              AnimatedSnackBar.show(
-                                context: context,
-                                message: Text(
-                                  msg,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                icon: const Icon(
-                                  Icons.close_rounded,
-                                  color: Colors.red,
-                                  size: 30,
-                                ),
-                              );
-                            },
+                          provider.logout();
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            RoutesName.loginRoute,
+                            (Route<dynamic> route) =>
+                                false, // This removes all routes from the stack
                           );
                         },
-                        width: 100,
-                        borderRadius: 20,
-                        isLoading: loading,
-                        circularProgressIndicatorSize: 18,
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.red),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                        ),
+                        child: const Text("Logout"),
                       ),
-                    ),
-                    20.0.marginWidth,
-                    ElevatedButton(
-                      onPressed: () {
-                        provider.logout();
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          RoutesName.loginRoute,
-                          (Route<dynamic> route) => false, // This removes all routes from the stack
-                        );
-                      },
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(Colors.red),
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      ),
-                      child: const Text("Logout"),
-                    ),
-                  ],
-                ),
-              ]),
+                    ],
+                  ),
+                  12.0.marginHeight,
+                ]),
+              ),
             ),
           ),
           Container(
