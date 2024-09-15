@@ -20,7 +20,7 @@ Welcome to the Flutter Clothing Mart App! This project is a mobile application d
 - 🏠 **Clothing Display**: Displays a list of clothes categorized by type.
 - 🏷️ **Chip Widget**: Allows users to filter clothes by category.
 - 🔍 **Search Bar**: Enables users to search for specific clothing items.
-- 🎉 **Recommendations**: Recommends clothing based on the user's weight.
+- 🎉 **Recommendations**: Recommends clothing based on the user's weight and gender.
 
 ### Details Screen
 
@@ -70,7 +70,3 @@ Handles data retrieval and storage, interacting with external sources.
 3. Run `flutter pub get` to install dependencies.
 4. Ensure Firebase setup and configuration (refer to Firebase documentation).
 5. Run the app on your preferred device/emulator with `flutter run`.
-
-## Note
-
-This is not the final version and needs more modification some features not working (like: search, recommendation, and changing user image), and there are some bugs but I will solve it at nearest time as I can also the code needs more reorganizing and i will do it as much as I can
